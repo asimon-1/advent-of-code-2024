@@ -1,9 +1,11 @@
 pub fn part_one(input: String) -> u32 {
+    println!("{}", input);
     let answer = 42;
     answer
 }
 
 pub fn part_two(input: String) -> u32 {
+    println!("{}", input);
     let answer = 43;
     answer
 }

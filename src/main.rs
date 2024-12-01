@@ -1,6 +1,7 @@
 use std::fs;
 
 mod day_00;
+mod day_01;
 
 fn run(day: u8, part: u8, f: &dyn Fn(String) -> u32) {
     let input = fs::read_to_string(format!("input/day_{:02}.txt", day))
