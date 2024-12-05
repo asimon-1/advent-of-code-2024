@@ -4,6 +4,7 @@ mod day_00;
 mod day_01;
 mod day_02;
 mod day_03;
+mod day_04;
 
 fn run(day: u8, part: u8, f: &dyn Fn(String) -> u32) {
     let input = fs::read_to_string(format!("input/day_{:02}.txt", day))
@@ -21,4 +22,6 @@ fn main() {
     run(2, 2, &day_02::part_two);
     run(3, 1, &day_03::part_one);
     run(3, 2, &day_03::part_two);
+    run(4, 1, &day_04::part_one);
+    run(4, 2, &day_04::part_two);
 }

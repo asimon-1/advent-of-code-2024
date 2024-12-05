@@ -1,4 +1,4 @@
-use regex::{Match, Regex};
+use regex::Regex;
 
 pub fn part_one(input: String) -> u32 {
     let re = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap();
