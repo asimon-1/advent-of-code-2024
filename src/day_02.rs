@@ -7,18 +7,18 @@ fn parse_input(input: String) -> Vec<Vec<u32>> {
         .collect()
 }
 
-fn is_safe(report: &Vec<u32>) -> bool {
+fn is_safe(report: &[u32]) -> bool {
     (report.iter().is_sorted_by(|a, b| a < b) || report.iter().is_sorted_by(|a, b| a > b))
         && report
             .windows(2)
             .all(|window| (max(window[0], window[1]) - min(window[0], window[1]) <= 3))
 }
 
-fn generate_subreports(report: &Vec<u32>) -> Vec<Vec<u32>> {
+fn generate_subreports(report: &[u32]) -> Vec<Vec<u32>> {
     let mut subreports = Vec::new();
-    subreports.push(report.clone());
+    subreports.push(report.to_owned());
     for ind in 0..report.len() {
-        let mut subreport = report.clone();
+        let mut subreport = report.to_owned();
         subreport.remove(ind);
         subreports.push(subreport);
     }
@@ -27,7 +27,7 @@ fn generate_subreports(report: &Vec<u32>) -> Vec<Vec<u32>> {
 
 pub fn part_one(input: String) -> u32 {
     let table = parse_input(input);
-    table.iter().filter(|report| is_safe(*report)).count() as u32
+    table.iter().filter(|report| is_safe(report)).count() as u32
 }
 
 pub fn part_two(input: String) -> u32 {
@@ -36,7 +36,7 @@ pub fn part_two(input: String) -> u32 {
         .iter()
         .filter(|report| {
             let subreports = generate_subreports(report);
-            subreports.iter().any(is_safe)
+            subreports.iter().any(|x| is_safe(x))
         })
         .count() as u32
 }

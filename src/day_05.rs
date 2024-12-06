@@ -33,7 +33,7 @@ pub fn part_one(input: String) -> u32 {
     let patterns: Vec<Regex> = rules.iter().map(|rule| rule.to_regex()).collect();
     updates
         .iter()
-        .filter(|update| patterns.iter().all(|p| !p.is_match(*update)))
+        .filter(|update| patterns.iter().all(|p| !p.is_match(update)))
         .map(|u| {
             let pages = u.split(",").collect::<Vec<&str>>();
             pages[(pages.len() - 1) / 2].parse::<u32>().unwrap()
@@ -46,7 +46,7 @@ pub fn part_two(input: String) -> u32 {
     let patterns: Vec<Regex> = rules.iter().map(|rule| rule.to_regex()).collect();
     updates
         .iter()
-        .filter(|update| patterns.iter().any(|p| p.is_match(*update)))
+        .filter(|update| patterns.iter().any(|p| p.is_match(update)))
         .map(|update| update.split(",").collect::<Vec<&str>>())
         .map(|update| {
             let mut u = update.clone();
