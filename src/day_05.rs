@@ -1,74 +1,64 @@
-use regex::Regex;
+use itertools::Itertools;
+use std::cmp::Ordering;
 
-#[derive(Debug)]
-struct Order {
-    before: String,
-    after: String,
-}
-
-impl Order {
-    fn from_delimited(line: &str) -> Order {
-        let (before, after) = line.split_once("|").expect("No delimiter |");
-        Order {
-            before: before.to_string(),
-            after: after.to_string(),
-        }
-    }
-
-    fn to_regex(&self) -> Regex {
-        let pattern = format!("{},.*?{}", self.after, self.before);
-        Regex::new(&pattern).expect("Could not compile regex")
-    }
-}
-
-fn parse_input(input: String) -> (Vec<Order>, Vec<String>) {
+fn parse_input(input: String) -> (Vec<(u32, u32)>, Vec<Vec<u32>>) {
     let (rules_str, update_str) = input.split_once("\n\n").expect("No delimiter \\n\\n");
-    let rules = rules_str.lines().map(Order::from_delimited).collect();
-    let updates = update_str.lines().map(|x| x.to_string()).collect();
+    let rules = rules_str
+        .lines()
+        .map(|line| {
+            line.split_once("|")
+                .expect("Could not find rule delimiter!")
+        })
+        .map(|(a, b)| (a.parse::<u32>().unwrap(), b.parse::<u32>().unwrap()))
+        .collect();
+    let updates = update_str
+        .lines()
+        .map(|update| update.split(","))
+        .map(|update| update.map(|page| page.parse::<u32>().unwrap()).collect())
+        .collect();
     (rules, updates)
+}
+
+fn compare(a: u32, b: u32, rules: &[(u32, u32)]) -> Ordering {
+    if rules.contains(&(a, b)) {
+        Ordering::Less
+    } else if rules.contains(&(b, a)) {
+        Ordering::Greater
+    } else {
+        Ordering::Equal
+    }
+}
+
+fn is_vec_equal(a: &[u32], b: &[u32]) -> bool {
+    a.len() == b.len() && a.iter().zip(b).all(|(a, b)| a == b)
 }
 
 pub fn part_one(input: String) -> u32 {
     let (rules, updates) = parse_input(input);
-    let patterns: Vec<Regex> = rules.iter().map(|rule| rule.to_regex()).collect();
     updates
         .iter()
-        .filter(|update| patterns.iter().all(|p| !p.is_match(update)))
-        .map(|u| {
-            let pages = u.split(",").collect::<Vec<&str>>();
-            pages[(pages.len() - 1) / 2].parse::<u32>().unwrap()
+        .filter(|update| {
+            let mut sorted_update = (*update).clone();
+            sorted_update.sort_by(|a, b| compare(*a, *b, &rules));
+            is_vec_equal(update, &sorted_update)
         })
+        .map(|update| update[(update.len() - 1) / 2])
         .sum()
 }
 
 pub fn part_two(input: String) -> u32 {
-    let (rules, updates) = parse_input(input);
-    let patterns: Vec<Regex> = rules.iter().map(|rule| rule.to_regex()).collect();
+    let (rules, mut updates) = parse_input(input);
     updates
-        .iter()
-        .filter(|update| patterns.iter().any(|p| p.is_match(update)))
-        .map(|update| update.split(",").collect::<Vec<&str>>())
-        .map(|update| {
-            let mut u = update.clone();
-            'outer: loop {
-                for order in &rules {
-                    if let Some(before_idx) = u.iter().position(|x| *x == order.before) {
-                        if let Some(after_idx) = u.iter().position(|x| *x == order.after) {
-                            if before_idx > after_idx {
-                                u.swap(before_idx, after_idx);
-                                // We might now violate some earlier rule so start again at the beginning
-                                // Praying that there's no infinite loop here
-                                continue 'outer;
-                            }
-                        }
-                    }
-                }
-                // If we made it through all the rules without needing to swap anything, then we are sorted and can move on.
-                break;
-            }
-            u
+        .iter_mut()
+        .filter(|update| {
+            let mut sorted_update = (*update).clone();
+            sorted_update.sort_by(|a, b| compare(*a, *b, &rules));
+            !is_vec_equal(update, &sorted_update)
         })
-        .map(|pages| pages[(pages.len() - 1) / 2].parse::<u32>().unwrap())
+        .update(|update| {
+            update.sort_by(|a, b| compare(*a, *b, &rules));
+        })
+        .map(|u| u[(u.len() - 1) / 2])
         .sum()
 }
 
