@@ -112,6 +112,17 @@ fn step_part_two(input: &mut Vec<Vec<Position>>, current_pos: &mut Position) -> 
     }
 }
 
+fn walk_part_two(simulation: &mut Vec<Vec<Position>>, starting_pos: Position) -> bool {
+    let mut current_pos = starting_pos;
+    while let Some(is_loop) = step_part_two(simulation, &mut current_pos) {
+        if is_loop {
+            return true;
+        }
+    }
+    simulation[current_pos.y as usize][current_pos.x as usize] = current_pos;
+    false
+}
+
 pub fn part_one(input: String) -> u32 {
     let mut input = parse_input(input);
     let mut current_pos = find_initial_position(&input);
@@ -126,18 +137,19 @@ pub fn part_one(input: String) -> u32 {
 pub fn part_two(input: String) -> u32 {
     let input = parse_input(input);
     let starting_pos = find_initial_position(&input);
+    let input = transform_input_part_two(input.clone());
+    let mut unobstructed_path = input.clone();
+    walk_part_two(&mut unobstructed_path, starting_pos);
     let mut answer = 0;
     for row_idx in 0..input.len() {
         for col_idx in 0..input[row_idx].len() {
-            let mut simulation = transform_input_part_two(input.clone());
-            let mut current_pos = starting_pos;
-            if simulation[row_idx][col_idx] != current_pos {
+            if [UP, DOWN, LEFT, RIGHT].contains(&unobstructed_path[row_idx][col_idx].dir)
+                && input[row_idx][col_idx] != starting_pos
+            {
+                let mut simulation = input.clone();
                 simulation[row_idx][col_idx].dir = OBSTRUCTION;
-            }
-            while let Some(is_loop) = step_part_two(&mut simulation, &mut current_pos) {
-                if is_loop {
+                if walk_part_two(&mut simulation, starting_pos) {
                     answer += 1;
-                    break;
                 }
             }
         }
