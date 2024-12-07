@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use std::cmp::Ordering;
 
-fn parse_input(input: String) -> (Vec<(u32, u32)>, Vec<Vec<u32>>) {
+fn parse_input(input: String) -> (Vec<(u64, u64)>, Vec<Vec<u64>>) {
     let (rules_str, update_str) = input.split_once("\n\n").expect("No delimiter \\n\\n");
     let rules = rules_str
         .lines()
@@ -9,17 +9,17 @@ fn parse_input(input: String) -> (Vec<(u32, u32)>, Vec<Vec<u32>>) {
             line.split_once("|")
                 .expect("Could not find rule delimiter!")
         })
-        .map(|(a, b)| (a.parse::<u32>().unwrap(), b.parse::<u32>().unwrap()))
+        .map(|(a, b)| (a.parse::<u64>().unwrap(), b.parse::<u64>().unwrap()))
         .collect();
     let updates = update_str
         .lines()
         .map(|update| update.split(","))
-        .map(|update| update.map(|page| page.parse::<u32>().unwrap()).collect())
+        .map(|update| update.map(|page| page.parse::<u64>().unwrap()).collect())
         .collect();
     (rules, updates)
 }
 
-fn compare(a: u32, b: u32, rules: &[(u32, u32)]) -> Ordering {
+fn compare(a: u64, b: u64, rules: &[(u64, u64)]) -> Ordering {
     if rules.contains(&(a, b)) {
         Ordering::Less
     } else if rules.contains(&(b, a)) {
@@ -29,11 +29,11 @@ fn compare(a: u32, b: u32, rules: &[(u32, u32)]) -> Ordering {
     }
 }
 
-fn is_vec_equal(a: &[u32], b: &[u32]) -> bool {
+fn is_vec_equal(a: &[u64], b: &[u64]) -> bool {
     a.len() == b.len() && a.iter().zip(b).all(|(a, b)| a == b)
 }
 
-pub fn part_one(input: String) -> u32 {
+pub fn part_one(input: String) -> u64 {
     let (rules, updates) = parse_input(input);
     updates
         .iter()
@@ -46,7 +46,7 @@ pub fn part_one(input: String) -> u32 {
         .sum()
 }
 
-pub fn part_two(input: String) -> u32 {
+pub fn part_two(input: String) -> u64 {
     let (rules, mut updates) = parse_input(input);
     updates
         .iter_mut()

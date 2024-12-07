@@ -101,7 +101,7 @@ fn walk(simulation: &mut Vec<Vec<Position>>, starting_pos: Position) -> bool {
     false
 }
 
-pub fn part_one(input: String) -> u32 {
+pub fn part_one(input: String) -> u64 {
     let input = parse_input(input);
     let starting_pos = find_initial_position(&input);
     let mut input = transform_input(input);
@@ -113,10 +113,10 @@ pub fn part_one(input: String) -> u32 {
                 .filter(|c| [UP, DOWN, LEFT, RIGHT].contains(&c.dir))
                 .count()
         })
-        .sum::<usize>() as u32
+        .sum::<usize>() as u64
 }
 
-pub fn part_two(input: String) -> u32 {
+pub fn part_two(input: String) -> u64 {
     let input = parse_input(input);
     let starting_pos = find_initial_position(&input);
     let input = transform_input(input);

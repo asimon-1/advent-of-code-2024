@@ -1,8 +1,8 @@
-pub fn part_one(input: String) -> u32 {
+pub fn part_one(input: String) -> u64 {
     42
 }
 
-pub fn part_two(input: String) -> u32 {
+pub fn part_two(input: String) -> u64 {
     43
 }
 

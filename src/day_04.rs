@@ -33,7 +33,7 @@ fn parse_input(input: String) -> VecDeque<VecDeque<char>> {
     ret
 }
 
-pub fn part_one(input: String) -> u32 {
+pub fn part_one(input: String) -> u64 {
     let table = parse_input(input);
     let width = table[0].len() as i32;
     let height = table.len() as i32;
@@ -55,7 +55,7 @@ pub fn part_one(input: String) -> u32 {
     answer
 }
 
-pub fn part_two(input: String) -> u32 {
+pub fn part_two(input: String) -> u64 {
     let table = parse_input(input);
     let width = table[0].len() as i32;
     let height = table.len() as i32;

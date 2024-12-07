@@ -1,14 +1,14 @@
 use regex::Regex;
 
-pub fn part_one(input: String) -> u32 {
+pub fn part_one(input: String) -> u64 {
     let re = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap();
     re.captures_iter(&input)
         .map(|c| c.extract())
-        .map(|(_, [a, b])| a.parse::<u32>().unwrap() * b.parse::<u32>().unwrap())
+        .map(|(_, [a, b])| a.parse::<u64>().unwrap() * b.parse::<u64>().unwrap())
         .sum()
 }
 
-pub fn part_two(input: String) -> u32 {
+pub fn part_two(input: String) -> u64 {
     let re = Regex::new(r"do\(\)([\s\S]*?)don't\(\)").unwrap();
     let mut instructions = String::from("do()");
     instructions.push_str(&input);

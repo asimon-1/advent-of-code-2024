@@ -7,8 +7,9 @@ mod day_03;
 mod day_04;
 mod day_05;
 mod day_06;
+mod day_07;
 
-fn run(day: u8, part: u8, f: &dyn Fn(String) -> u32) {
+fn run(day: u8, part: u8, f: &dyn Fn(String) -> u64) {
     let input = fs::read_to_string(format!("input/day_{:02}.txt", day))
         .expect("Could not read input file!");
     let answer = f(input);
@@ -30,4 +31,6 @@ fn main() {
     run(5, 2, &day_05::part_two);
     run(6, 1, &day_06::part_one);
     run(6, 2, &day_06::part_two);
+    run(7, 1, &day_07::part_one);
+    run(7, 2, &day_07::part_two);
 }

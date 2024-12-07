@@ -1,16 +1,16 @@
 use std::cmp::{max, min};
 use std::iter::zip;
 
-fn parse_input(input: String) -> (Vec<u32>, Vec<u32>) {
-    let mut left_list = Vec::<u32>::new();
-    let mut right_list = Vec::<u32>::new();
+fn parse_input(input: String) -> (Vec<u64>, Vec<u64>) {
+    let mut left_list = Vec::<u64>::new();
+    let mut right_list = Vec::<u64>::new();
     input
         .lines()
         .map(|line| line.split_once(" ").unwrap())
         .map(|(left, right)| {
             (
-                left.trim().parse::<u32>().unwrap(),
-                right.trim().parse::<u32>().unwrap(),
+                left.trim().parse::<u64>().unwrap(),
+                right.trim().parse::<u64>().unwrap(),
             )
         })
         .for_each(|(left, right)| {
@@ -20,7 +20,7 @@ fn parse_input(input: String) -> (Vec<u32>, Vec<u32>) {
     (left_list, right_list)
 }
 
-pub fn part_one(input: String) -> u32 {
+pub fn part_one(input: String) -> u64 {
     let mut answer = 0;
     let (mut left_list, mut right_list) = parse_input(input);
     left_list.sort();
@@ -31,11 +31,11 @@ pub fn part_one(input: String) -> u32 {
     answer
 }
 
-pub fn part_two(input: String) -> u32 {
+pub fn part_two(input: String) -> u64 {
     let mut answer = 0;
     let (left_list, right_list) = parse_input(input);
     left_list.iter().for_each(|left| {
-        let count = right_list.iter().filter(|r| *r == left).count() as u32;
+        let count = right_list.iter().filter(|r| *r == left).count() as u64;
         answer += left * count;
     });
     answer
